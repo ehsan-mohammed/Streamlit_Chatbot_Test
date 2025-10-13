@@ -2,3 +2,5 @@
 This is a prototype for a production grade WhatsApp ChatBot
 
 You can test it out here: https://relaibot.streamlit.app/
+
+P.S.; This bot is currently out of order 😅
