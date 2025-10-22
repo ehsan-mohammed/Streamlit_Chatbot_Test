@@ -35,7 +35,7 @@ except KeyError:
 # --- UI & LOGIC ---
 st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 # st.title("This bot is currently out of order 😅")
-st.write("I am a RELAI Expert real-estate AI Agent ready to help you find your ideal property.")
+st.write("I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.")
 
 if st.button("Reset Session 🔄"):
     st.session_state.messages = []
