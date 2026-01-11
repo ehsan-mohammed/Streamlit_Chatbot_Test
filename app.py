@@ -18,7 +18,8 @@ st.markdown("""
         font-family: 'Zalando Sans Expanded', sans-serif !important;
     }
     
-    .subtitle {
+    /* Target the paragraph after h1 for subheading */
+    .stMarkdown p {
         font-family: 'Zalando Sans Expanded', sans-serif !important;
     }
     </style>
@@ -48,13 +49,13 @@ except KeyError:
 # --- UI & LOGIC ---
 st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 # st.title("This bot is currently out of order 😅")
-st.markdown('<p class="subtitle">I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.</p>', unsafe_allow_html=True)
+st.write("I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.")
 
 # Being blocked by ad-blockers because it's a social link 😂
 # st.write("UPDATE: Now LIVE on [WhatsApp](https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0)")
 
 # Create two columns for the buttons
-col1, col2 = st.columns([1, 1]) # Equal width columns for better button placement
+col1, col2 = st.columns([1, 1])
 
 with col1:
     st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
