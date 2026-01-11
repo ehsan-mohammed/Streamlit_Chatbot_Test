@@ -44,28 +44,12 @@ st.markdown(f"""
     /* Main background with image */
     .stApp {{
         background: {'linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url(' + bg_image + ') center/cover no-repeat fixed' if bg_image else 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)'};
-        position: relative;
-    }}
-    
-    /* Gradient overlay at bottom for smooth transition */
-    .stApp::after {{
-        content: '';
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 200px;
-        background: linear-gradient(to bottom, transparent 0%, rgba(15, 23, 42, 0.7) 50%, rgba(15, 23, 42, 0.95) 100%);
-        pointer-events: none;
-        z-index: 0;
     }}
     
     /* Main container styling */
     .main .block-container {{
         padding: 3rem 2rem;
         max-width: 800px;
-        position: relative;
-        z-index: 1;
     }}
     
     /* Title styling */
@@ -149,8 +133,6 @@ st.markdown(f"""
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
         border-radius: 24px !important;
         padding: 0.5rem !important;
-        position: relative;
-        z-index: 2;
     }}
     
     /* Chat input field */
@@ -207,10 +189,6 @@ st.markdown(f"""
         .stButton button {{
             padding: 0.65rem 1.5rem !important;
             font-size: 0.9rem !important;
-        }}
-        
-        .stApp::after {{
-            height: 150px;
         }}
     }}
 </style>
