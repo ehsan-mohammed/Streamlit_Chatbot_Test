@@ -79,12 +79,12 @@ st.markdown(f"""
     }}
     
     /* Subtitle text */
-    .main > div > div > div > p {{
+    .main p {{
         color: rgba(255, 255, 255, 0.75) !important;
-        font-size: 1.05rem;
-        font-weight: 300;
-        text-align: center;
-        margin-bottom: 2rem;
+        font-size: 1.05rem !important;
+        font-weight: 300 !important;
+        text-align: center !important;
+        margin-bottom: 2rem !important;
     }}
     
     /* Button styling - square, no border radius */
