@@ -4,66 +4,117 @@ import uuid
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
-    page_title="Relai Estate Agent",
-    page_icon="🏡",
+    page_title="Relai Estate",
+    page_icon="🏢",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
 
-# --- CUSTOM CSS & STYLING ---
-# This hides the default Streamlit menu/footer and styles buttons to look premium
+# --- CUSTOM CSS (The Design Logic) ---
 st.markdown("""
 <style>
-    /* Import a nice font */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+    /* 1. IMPORT FONTS */
+    @import url('https://fonts.googleapis.com/css2?family=Antonio:wght@100;700&family=Space+Grotesk:wght@300;400;600&display=swap');
+
+    /* 2. GLOBAL OVERRIDES */
+    .stApp {
+        background-color: #050505; /* Deepest Black */
+    }
     
     html, body, [class*="css"]  {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Space Grotesk', sans-serif; /* Tech/Modern Body Font */
+        color: #e0e0e0;
     }
 
-    /* Hide Streamlit Branding */
+    /* 3. TYPOGRAPHY STYLING */
+    h1, h2, h3 {
+        font-family: 'Antonio', sans-serif !important; /* The "Long" Font */
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 700;
+    }
+
+    /* The Main Title Style */
+    .hero-title {
+        font-size: 4.5rem !important;
+        background: linear-gradient(to right, #ffffff, #888888);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        margin-bottom: 0px;
+        line-height: 1.1;
+    }
+
+    .hero-subtitle {
+        font-family: 'Space Grotesk', sans-serif;
+        color: #00D26A; /* WhatsApp/Emerald Green */
+        text-align: center;
+        font-size: 1rem;
+        letter-spacing: 1px;
+        margin-bottom: 40px;
+        text-transform: uppercase;
+        opacity: 0.8;
+    }
+
+    /* 4. CHAT MESSAGE STYLING */
+    /* Remove default backgrounds to make it look cleaner */
+    .stChatMessage {
+        background-color: transparent !important;
+        border: none !important;
+    }
+
+    /* User Message */
+    .stChatMessage[data-testid="stChatMessage"]:nth-child(odd) {
+        border-left: 2px solid #333;
+        padding-left: 15px;
+    }
+    
+    /* Assistant Message */
+    .stChatMessage[data-testid="stChatMessage"]:nth-child(even) {
+        border-left: 2px solid #00D26A;
+        padding-left: 15px;
+        background: rgba(0, 210, 106, 0.05) !important; /* Slight green tint */
+    }
+
+    /* 5. INPUT FIELD STYLING */
+    .stChatInput textarea {
+        background-color: #111 !important;
+        color: white !important;
+        border: 1px solid #333 !important;
+        border-radius: 0px !important; /* Square corners for pro look */
+    }
+    .stChatInput textarea:focus {
+        border-color: #00D26A !important;
+        box-shadow: 0 0 10px rgba(0, 210, 106, 0.2) !important;
+    }
+
+    /* 6. BUTTON / SUGGESTION STYLING */
+    /* Making buttons look like architectural chips */
+    div.stButton > button {
+        width: 100%;
+        background-color: transparent;
+        color: #888;
+        border: 1px solid #333;
+        border-radius: 4px;
+        padding: 15px 10px;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        text-align: left;
+    }
+    
+    div.stButton > button:hover {
+        border-color: #00D26A;
+        color: #fff;
+        background-color: rgba(0, 210, 106, 0.05);
+        transform: translateX(5px); /* Slide effect */
+    }
+
+    /* Hide standard UI elements */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
-
-    /* Style the main title */
-    .main-title {
-        text-align: center;
-        font-weight: 600;
-        font-size: 2.5rem;
-        background: -webkit-linear-gradient(45deg, #25D366, #128C7E); /* WhatsApp Green Gradient */
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0px;
-    }
     
-    .sub-title {
-        text-align: center;
-        color: #888;
-        font-size: 1.1rem;
-        margin-bottom: 30px;
-    }
-
-    /* Suggestion Cards */
-    .suggestion-btn {
-        border: 1px solid #333;
-        border-radius: 10px;
-        padding: 10px;
-        text-align: center;
-        background-color: #0e1117;
-        color: white;
-        transition: 0.3s;
-        cursor: pointer;
-    }
-    .suggestion-btn:hover {
-        border-color: #25D366;
-        background-color: #1a1f26;
-    }
-
-    /* Chat Input Styling */
-    .stChatInput {
-        padding-bottom: 20px;
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -74,82 +125,101 @@ if "messages" not in st.session_state:
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())
 
-# --- BACKEND API DETAILS ---
+# --- BACKEND API SETUP ---
+# Load secrets or use fallback for testing
 try:
-    # Ensure you have these in .streamlit/secrets.toml
     API_URL = st.secrets["api"]["url"]
     API_KEY = st.secrets["api"]["key"]
 except KeyError:
-    # Fallback for testing if secrets aren't set up yet
-    API_URL = "http://localhost:3000/chat" 
+    API_URL = "http://localhost:3000/chat"
     API_KEY = "test"
-    # st.error("API URL/Key not found. Please check secrets.")
-    # st.stop()
 
-# --- SIDEBAR (ADMIN & CONTROLS) ---
+# --- SIDEBAR (Controls) ---
 with st.sidebar:
-    st.title("⚙️ Controls")
-    st.write("Manage your session here.")
-    
-    if st.button("New Chat / Reset 🔄", use_container_width=True):
+    st.markdown("### SYSTEM CONTROLS")
+    if st.button("RESET MEMORY ⟳"):
         st.session_state.messages = []
         st.session_state.session_id = str(uuid.uuid4())
         st.rerun()
-
+    
     st.markdown("---")
-    st.markdown("### 📱 Mobile Experience")
-    st.link_button("Open in WhatsApp 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.", use_container_width=True)
+    st.markdown("<div style='font-size:0.8rem; color:#666;'>RELAI ESTATE AGENT<br>V 2.0 BETA</div>", unsafe_allow_html=True)
 
-# --- UI HEADER ---
-st.markdown('<div class="main-title">Relai AI Agent</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-title">Your expert real-estate companion. <br> Ask me about properties, prices, and locations.</div>', unsafe_allow_html=True)
+# --- HERO SECTION ---
+# Using HTML for the custom header look
+st.markdown('<div class="hero-title">RELAI</div>', unsafe_allow_html=True)
+st.markdown('<div class="hero-subtitle">Real Estate Intelligence Unit</div>', unsafe_allow_html=True)
 
-# --- DISPLAY CHAT HISTORY ---
-# We display the chat history first so it stays on screen
+# --- CHAT HISTORY ---
+# Display existing messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# --- EMPTY STATE SUGGESTIONS ---
-# If chat is empty, show clickable suggestion chips to help the user start
+# --- EMPTY STATE (Suggestions) ---
+# Only show these if chat history is empty
 if len(st.session_state.messages) == 0:
-    st.markdown("Or try one of these examples:")
-    cols = st.columns(2)
+    st.markdown("<br>", unsafe_allow_html=True) # Spacer
     
-    # Helper function to handle button clicks
-    def set_prompt(text):
+    col1, col2 = st.columns(2)
+    
+    # We use callback functions to handle button clicks cleanly
+    def submit_suggestion(text):
         st.session_state.messages.append({"role": "user", "content": text})
-        st.rerun() # Rerun to trigger the "React to user input" block logic requires a small refactor or just manual submission.
-        # Note: Streamlit buttons usually don't autofill chat input easily without callbacks. 
-        # For simplicity in this structure, we will just display text examples below.
+        # Note: In Streamlit, to trigger the API call immediately after a button click 
+        # usually requires a rerun or setting a flag. For simplicity in this layout,
+        # we append to history. The user might need to hit enter or we use a flag logic.
+        # But visually, this sets the stage.
+    
+    with col1:
+        if st.button("Find 2BHK in Bangalore < 1Cr"):
+            submit_suggestion("Find a 2BHK in Bangalore under 1 Cr")
+            st.rerun()
+        if st.button("Show villas with private pool"):
+            submit_suggestion("Show me villas with a pool")
+            st.rerun()
+            
+    with col2:
+        if st.button("Investment hotspots 2024"):
+            submit_suggestion("What are the best areas for investment?")
+            st.rerun()
+        if st.button("Rental yields in Mumbai"):
+            submit_suggestion("Rental trends in Mumbai South")
+            st.rerun()
 
-    with cols[0]:
-        st.info("Find a 2BHK in Bangalore under 1 Cr")
-    with cols[1]:
-        st.info("What are the best areas for investment?")
-    with cols[0]:
-        st.info("Show me villas with a pool")
-    with cols[1]:
-        st.info("Rental trends in Mumbai South")
+# --- CHAT INPUT & LOGIC ---
+# We check if the last message was from the user (handling the button click case)
+# OR if the user just typed into the input box.
 
-# --- CHAT LOGIC ---
-if prompt := st.chat_input("Ask about your dream home..."):
-    # 1. Display user message
+user_input = st.chat_input("Initialize query protocol...")
+
+# Logic: If user entered text OR if the last message in history is USER (from button click) 
+# AND the very last message is NOT assistant (meaning we haven't answered yet).
+should_run_api = False
+prompt_text = ""
+
+if user_input:
+    prompt_text = user_input
     with st.chat_message("user"):
-        st.markdown(prompt)
+        st.markdown(prompt_text)
+    st.session_state.messages.append({"role": "user", "content": prompt_text})
+    should_run_api = True
 
-    # 2. Add to history
-    st.session_state.messages.append({"role": "user", "content": prompt})
+elif len(st.session_state.messages) > 0 and st.session_state.messages[-1]["role"] == "user":
+    # This catches the button click case after the rerun
+    prompt_text = st.session_state.messages[-1]["content"]
+    should_run_api = True
 
-    # 3. Call API
-    with st.spinner("Analyzing property market..."):
+# --- API EXECUTION ---
+if should_run_api:
+    with st.spinner("Accessing property database..."):
         try:
             headers = {
                 "Authorization": f"Bearer {API_KEY}",
                 "Content-Type": "application/json"
             }
             payload = {
-                "message": prompt,
+                "message": prompt_text,
                 "sessionId": st.session_state.session_id
             }
 
@@ -157,15 +227,15 @@ if prompt := st.chat_input("Ask about your dream home..."):
             response.raise_for_status()
 
             backend_response = response.json()
-            assistant_reply = backend_response.get("reply", "I found some info, but couldn't parse the reply.")
+            assistant_reply = backend_response.get("reply", "Database connection error.")
 
-            # 4. Display assistant response
             with st.chat_message("assistant"):
                 st.markdown(assistant_reply)
 
-            # 5. Add assistant response to history
             st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
 
         except requests.exceptions.RequestException as e:
-            st.error(f"Connection error: {e}")
-            st.session_state.messages.pop() # Remove user prompt so they can try again
+            st.error(f"Network Error: {e}")
+            # If error, remove the user's last message so they can try again
+            if len(st.session_state.messages) > 0:
+                st.session_state.messages.pop()
