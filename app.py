@@ -1,5 +1,3 @@
-# app.py
-
 import streamlit as st
 import requests
 import uuid
@@ -10,6 +8,21 @@ st.set_page_config(
     page_icon="🤖",
     layout="centered"
 )
+
+# --- CUSTOM CSS FOR FONT ---
+st.markdown("""
+    <style>
+    @import url('https://fonts.cdnfonts.com/css/zalando-sans');
+    
+    h1 {
+        font-family: 'Zalando Sans Expanded', sans-serif !important;
+    }
+    
+    .subtitle {
+        font-family: 'Zalando Sans Expanded', sans-serif !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 # --- SESSION STATE INITIALIZATION ---
 # This is crucial for maintaining the chat history and a unique session ID per user.
@@ -35,13 +48,13 @@ except KeyError:
 # --- UI & LOGIC ---
 st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 # st.title("This bot is currently out of order 😅")
-st.write("I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.")
+st.markdown('<p class="subtitle">I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.</p>', unsafe_allow_html=True)
 
 # Being blocked by ad-blockers because it's a social link 😂
 # st.write("UPDATE: Now LIVE on [WhatsApp](https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0)")
 
 # Create two columns for the buttons
-col1, col2 = st.columns([1, 5]) # Ratio 1:5 keeps buttons closer to the left
+col1, col2 = st.columns([1, 1]) # Equal width columns for better button placement
 
 with col1:
     st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
