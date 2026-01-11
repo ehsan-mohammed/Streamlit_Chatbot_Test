@@ -53,8 +53,6 @@ with col2:
     st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
 
 if st.button("Reset Session 🔄"):
-
-if st.button("Reset Session 🔄"):
     st.session_state.messages = []
     st.session_state.session_id = str(uuid.uuid4())
     st.rerun()
