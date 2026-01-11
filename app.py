@@ -57,7 +57,7 @@ st.markdown(f"""
         height: 200px;
         background: linear-gradient(to bottom, transparent 0%, rgba(15, 23, 42, 0.7) 50%, rgba(15, 23, 42, 0.95) 100%);
         pointer-events: none;
-        z-index: 1;
+        z-index: 0;
     }}
     
     /* Main container styling */
@@ -65,7 +65,7 @@ st.markdown(f"""
         padding: 3rem 2rem;
         max-width: 800px;
         position: relative;
-        z-index: 2;
+        z-index: 1;
     }}
     
     /* Title styling */
@@ -150,7 +150,7 @@ st.markdown(f"""
         border-radius: 24px !important;
         padding: 0.5rem !important;
         position: relative;
-        z-index: 3;
+        z-index: 2;
     }}
     
     /* Chat input field */
