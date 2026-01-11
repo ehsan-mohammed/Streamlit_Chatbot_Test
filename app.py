@@ -38,7 +38,7 @@ st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 st.write("I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.")
 
 # Create two columns for the buttons
-col1, col2 = st.columns([1, 6]) # Ratio 1:3 keeps buttons closer to the left
+col1, col2 = st.columns([1, 5]) # Ratio 1:5 keeps buttons closer to the left
 
 with col1:
     st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
