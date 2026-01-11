@@ -36,9 +36,12 @@ except KeyError:
 st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 # st.title("This bot is currently out of order 😅")
 st.write("I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.")
-st.write("UPDATE: DEPLOYED TO PROD! Check it out on [WhatsApp](https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0)")
-# st.write("UPDATE: DEPLOYED TO PROD! Check it out on WhatsApp") 
-# Link: "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0"
+
+# Being blocked by ad-blockers because it's a social link 😂
+# st.write("UPDATE: Now LIVE on [WhatsApp](https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0)")
+
+# So I turn it into a button 
+st.link_button("UPDATE: DEPLOYED TO PROD! (Chat on WhatsApp 🚀)", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
 
 if st.button("Reset Session 🔄"):
     st.session_state.messages = []
