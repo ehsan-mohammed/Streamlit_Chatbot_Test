@@ -9,21 +9,35 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- CUSTOM CSS FOR FONT ---
+# --- CUSTOM CSS FOR CENTERED LAYOUT AND FONT ---
 st.markdown("""
-    <style>
-    @import url('https://fonts.cdnfonts.com/css/zalando-sans');
-    
-    h1 {
-        font-family: 'Zalando Sans Expanded', sans-serif !important;
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+
+<style>
+    /* Apply Zalando Sans Expanded to title and subtitle */
+    h1, .subtitle {
+        font-family: "Zalando Sans Expanded", sans-serif !important;
+        text-align: center !important;
     }
     
-    /* Target the paragraph after h1 for subheading */
-    .stMarkdown p {
-        font-family: 'Zalando Sans Expanded', sans-serif !important;
+    /* Center the subtitle text */
+    .subtitle {
+        text-align: center !important;
+        margin-bottom: 2rem !important;
     }
-    </style>
-    """, unsafe_allow_html=True)
+    
+    /* Center button container */
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+</style>
+""", unsafe_allow_html=True)
 
 # --- SESSION STATE INITIALIZATION ---
 # This is crucial for maintaining the chat history and a unique session ID per user.
@@ -48,19 +62,14 @@ except KeyError:
 
 # --- UI & LOGIC ---
 st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
-# st.title("This bot is currently out of order 😅")
-st.write("I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.")
+st.markdown('<p class="subtitle">I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.</p>', unsafe_allow_html=True)
 
-# Being blocked by ad-blockers because it's a social link 😂
-# st.write("UPDATE: Now LIVE on [WhatsApp](https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0)")
-
-# Create two columns for the buttons
-col1, col2 = st.columns([1, 1])
-
-with col1:
-    st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
+# Center the buttons using columns with empty space on sides
+col1, col2, col3 = st.columns([1, 1, 1])
 
 with col2:
+    st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
+    
     if st.button("Reset Session 🔄"):
         st.session_state.messages = []
         st.session_state.session_id = str(uuid.uuid4())
