@@ -4,6 +4,7 @@ import streamlit as st
 import requests
 import uuid
 import base64
+from pathlib import Path
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
@@ -12,204 +13,181 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- CUSTOM CSS ---
-def get_base64_image(image_path):
-    """Convert image to base64 for CSS background"""
+# --- FUNCTION TO LOAD BACKGROUND IMAGE ---
+def get_base64_of_bin_file(png_file):
+    """Convert local image to base64"""
     try:
-        with open(image_path, "rb") as img_file:
-            return base64.b64encode(img_file.read()).decode()
+        with open(png_file, "rb") as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
     except:
         return None
 
-# Custom CSS with mountain background and modern styling
-st.markdown("""
+# Load background image (name it 'background.jpg' in the same folder as app.py)
+img_file = Path("background.jpg")
+if img_file.exists():
+    img_base64 = get_base64_of_bin_file(img_file)
+    bg_image = f"data:image/jpeg;base64,{img_base64}"
+else:
+    bg_image = None
+
+# --- CUSTOM CSS ---
+st.markdown(f"""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
     
     /* Global Styles */
-    * {
-        font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif !important;
-    }
+    * {{
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    }}
     
     /* Main background with image */
-    .stApp {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.92) 100%),
-                    url('data:image/jpeg;base64,/9j/4AAQSkZJRg...') center/cover no-repeat fixed;
-        background-blend-mode: overlay;
-    }
-    
-    /* Fallback gradient background */
-    .stApp::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-        z-index: -1;
-    }
+    .stApp {{
+        background: {'linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url(' + bg_image + ') center/cover no-repeat fixed' if bg_image else 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)'};
+    }}
     
     /* Main container styling */
-    .main .block-container {
-        padding: 2rem 1rem;
-        max-width: 900px;
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(20px);
-        border-radius: 32px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-        margin-top: 2rem;
-    }
+    .main .block-container {{
+        padding: 3rem 2rem;
+        max-width: 800px;
+    }}
     
-    /* Title styling */
-    h1 {
-        background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #ec4899 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        font-weight: 700 !important;
-        font-size: 2.5rem !important;
+    /* Title styling - clean, no gradient */
+    h1 {{
+        color: #ffffff !important;
+        font-weight: 400 !important;
+        font-size: 2.25rem !important;
         letter-spacing: -0.02em;
-        margin-bottom: 1rem !important;
+        margin-bottom: 1.5rem !important;
         text-align: center;
-    }
+    }}
     
     /* Subtitle text */
-    .main p {
-        color: rgba(255, 255, 255, 0.8) !important;
-        font-size: 1.1rem;
-        font-weight: 400;
+    .main p {{
+        color: rgba(255, 255, 255, 0.7) !important;
+        font-size: 1rem;
+        font-weight: 300;
         text-align: center;
         margin-bottom: 2rem;
-    }
+    }}
     
-    /* Button styling */
-    .stButton button {
-        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+    /* Center the button container */
+    .button-container {{
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin: 2rem 0 3rem 0;
+    }}
+    
+    /* Button styling - clean, minimal */
+    .stButton button {{
+        background: rgba(255, 255, 255, 0.1) !important;
         color: white !important;
-        border: none !important;
-        border-radius: 16px !important;
-        padding: 0.75rem 2rem !important;
-        font-weight: 600 !important;
-        font-size: 1rem !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4) !important;
-        letter-spacing: 0.02em;
-    }
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 12px !important;
+        padding: 0.65rem 1.75rem !important;
+        font-weight: 400 !important;
+        font-size: 0.95rem !important;
+        transition: all 0.2s ease !important;
+        backdrop-filter: blur(10px) !important;
+    }}
     
-    .stButton button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 30px rgba(59, 130, 246, 0.6) !important;
-    }
-    
-    /* Link button specific styling */
-    .stButton a {
-        text-decoration: none !important;
-    }
+    .stButton button:hover {{
+        background: rgba(255, 255, 255, 0.15) !important;
+        border-color: rgba(255, 255, 255, 0.3) !important;
+        transform: translateY(-1px) !important;
+    }}
     
     /* Chat message containers */
-    .stChatMessage {
-        background: rgba(255, 255, 255, 0.05) !important;
+    .stChatMessage {{
+        background: rgba(255, 255, 255, 0.06) !important;
         backdrop-filter: blur(10px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        border-radius: 20px !important;
-        padding: 1rem 1.5rem !important;
-        margin: 0.75rem 0 !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
-    }
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 16px !important;
+        padding: 1rem 1.25rem !important;
+        margin: 0.5rem 0 !important;
+    }}
     
     /* User message styling */
-    .stChatMessage[data-testid="user-message"] {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%) !important;
-        border-color: rgba(59, 130, 246, 0.3) !important;
-    }
+    .stChatMessage[data-testid="user-message"] {{
+        background: rgba(96, 165, 250, 0.12) !important;
+        border-color: rgba(96, 165, 250, 0.2) !important;
+    }}
     
     /* Assistant message styling */
-    .stChatMessage[data-testid="assistant-message"] {
-        background: rgba(255, 255, 255, 0.08) !important;
-    }
+    .stChatMessage[data-testid="assistant-message"] {{
+        background: rgba(255, 255, 255, 0.06) !important;
+    }}
     
     /* Chat message text */
-    .stChatMessage p {
+    .stChatMessage p {{
         color: rgba(255, 255, 255, 0.95) !important;
-        font-size: 1rem !important;
+        font-size: 0.95rem !important;
         line-height: 1.6 !important;
         text-align: left !important;
-    }
+        font-weight: 300 !important;
+    }}
     
     /* Chat input container */
-    .stChatInputContainer {
-        background: rgba(255, 255, 255, 0.05) !important;
+    .stChatInputContainer {{
+        background: rgba(255, 255, 255, 0.08) !important;
         backdrop-filter: blur(20px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        border-radius: 24px !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        border-radius: 20px !important;
         padding: 0.5rem !important;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3) !important;
-    }
+    }}
     
     /* Chat input field */
-    .stChatInput textarea {
+    .stChatInput textarea {{
         background: transparent !important;
         color: white !important;
         border: none !important;
-        font-size: 1rem !important;
-        font-weight: 400 !important;
-    }
+        font-size: 0.95rem !important;
+        font-weight: 300 !important;
+    }}
     
-    .stChatInput textarea::placeholder {
-        color: rgba(255, 255, 255, 0.5) !important;
-    }
+    .stChatInput textarea::placeholder {{
+        color: rgba(255, 255, 255, 0.4) !important;
+    }}
     
     /* Spinner */
-    .stSpinner > div {
+    .stSpinner > div {{
         border-top-color: #60a5fa !important;
-    }
+    }}
     
     /* Error messages */
-    .stAlert {
+    .stAlert {{
         background: rgba(239, 68, 68, 0.1) !important;
-        border: 1px solid rgba(239, 68, 68, 0.3) !important;
-        border-radius: 16px !important;
+        border: 1px solid rgba(239, 68, 68, 0.2) !important;
+        border-radius: 12px !important;
         color: #fca5a5 !important;
-    }
-    
-    /* Column containers */
-    .row-widget.stHorizontal {
-        gap: 1rem;
-    }
+        font-weight: 300 !important;
+    }}
     
     /* Hide Streamlit branding */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
+    #MainMenu {{visibility: hidden;}}
+    footer {{visibility: hidden;}}
+    header {{visibility: hidden;}}
     
     /* Responsive adjustments */
-    @media (max-width: 768px) {
-        .main .block-container {
-            padding: 1.5rem 1rem;
-            border-radius: 24px;
-            margin-top: 1rem;
-        }
+    @media (max-width: 768px) {{
+        .main .block-container {{
+            padding: 2rem 1rem;
+        }}
         
-        h1 {
-            font-size: 2rem !important;
-        }
+        h1 {{
+            font-size: 1.75rem !important;
+        }}
         
-        .main p {
-            font-size: 1rem;
-        }
+        .main p {{
+            font-size: 0.9rem;
+        }}
         
-        .stButton button {
+        .stButton button {{
             padding: 0.6rem 1.5rem !important;
             font-size: 0.9rem !important;
-        }
-    }
-    
-    /* Smooth scrolling */
-    html {
-        scroll-behavior: smooth;
-    }
+        }}
+    }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -232,17 +210,26 @@ except KeyError:
 st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 st.write("I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.")
 
-# Create two columns for the buttons
-col1, col2 = st.columns([1, 1])
+# Center-aligned buttons using HTML
+st.markdown("""
+<div style='display: flex; justify-content: center; gap: 1rem; margin: 2rem 0 3rem 0;'>
+</div>
+""", unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns([1, 1, 1])
 
 with col1:
-    st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
+    st.write("")
 
 with col2:
-    if st.button("Reset Session 🔄"):
+    st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0", use_container_width=True)
+    if st.button("Reset Session 🔄", use_container_width=True):
         st.session_state.messages = []
         st.session_state.session_id = str(uuid.uuid4())
         st.rerun()
+
+with col3:
+    st.write("")
 
 # Add spacing
 st.markdown("<div style='margin: 2rem 0'></div>", unsafe_allow_html=True)
