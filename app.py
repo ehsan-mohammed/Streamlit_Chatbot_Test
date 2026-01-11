@@ -37,6 +37,18 @@ st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 # st.title("This bot is currently out of order 😅")
 st.write("I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.")
 
+# Create two columns for the buttons
+col1, col2 = st.columns([1, 3]) # Ratio 1:3 keeps buttons closer to the left
+
+with col1:
+    st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
+
+with col2:
+    if st.button("Reset Session 🔄"):
+        st.session_state.messages = []
+        st.session_state.session_id = str(uuid.uuid4())
+        st.rerun()
+
 # Being blocked by ad-blockers because it's a social link 😂
 # st.write("UPDATE: Now LIVE on [WhatsApp](https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0)")
 
@@ -48,13 +60,13 @@ st.write("I am a Relai Expert real-estate AI Agent ready to help you find your i
 # with col1:
     # Use generic text to avoid ad-blocker triggers
     # st.markdown("**UPDATE: DEPLOYED TO PROD!**") 
-st.write("**UPDATE: DEPLOYED TO PROD!**") 
+# st.write("**UPDATE: DEPLOYED TO PROD!**") 
 
 # with col2:
     # A generic label like "Launch" often bypasses ad-block filters
     # st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
 
-st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
+# st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
 
 if st.button("Reset Session 🔄"):
     st.session_state.messages = []
