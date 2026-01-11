@@ -5,127 +5,145 @@ import uuid
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
     page_title="Relai Estate",
-    page_icon="🏢",
+    page_icon="🏛️",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
 
-# --- CUSTOM CSS (The Luxury Dashboard Theme) ---
+# --- LUXURY STYLING ---
 st.markdown("""
 <style>
-    /* 1. IMPORT FONTS */
-    /* Oswald = The "Long/Tall" Architectural Font */
-    /* Inter = Clean, readable body font */
-    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@300;500&family=Inter:wght@300;400;600&display=swap');
+    /* 1. LOAD PREMIUM FONTS */
+    /* Cinzel: Luxury Serif for Headers */
+    /* Lato: Clean, high-end sans-serif for body */
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap');
 
-    /* 2. BACKGROUND & STRUCTURE */
+    /* 2. BACKGROUND */
     .stApp {
-        /* subtle gradient to kill the "flat black" look */
-        background: radial-gradient(circle at 50% 10%, #1E2329 0%, #0D1117 100%);
+        /* Deep Midnight Blue Gradient */
+        background: linear-gradient(135deg, #0a1128 0%, #000000 100%);
     }
 
     html, body, [class*="css"] {
-        font-family: 'Inter', sans-serif;
+        font-family: 'Lato', sans-serif;
         color: #E0E0E0;
     }
 
-    /* 3. TYPOGRAPHY overrides */
+    /* 3. TYPOGRAPHY */
     h1, h2, h3 {
-        font-family: 'Oswald', sans-serif !important;
-        font-weight: 500 !important;
+        font-family: 'Cinzel', serif !important;
+        font-weight: 700 !important;
+        letter-spacing: 2px;
         text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .hero-container {
-        text-align: center;
-        padding: 40px 0;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        margin-bottom: 30px;
+        color: #D4AF37; /* Metallic Gold */
     }
 
     .hero-title {
-        font-size: 3.5rem;
-        font-weight: 300;
-        background: -webkit-linear-gradient(90deg, #A8C0FF, #3f2b96); /* Elegant Blue/Purple Gradient */
+        font-size: 3.8rem;
+        background: linear-gradient(to right, #D4AF37, #F2D06B, #D4AF37);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin: 0;
+        text-align: center;
+        margin-bottom: 10px;
+        text-shadow: 0px 4px 10px rgba(0,0,0,0.5);
     }
     
     .hero-subtitle {
-        color: #8b9bb4;
+        text-align: center;
+        color: #8fa3b0;
         font-size: 1.1rem;
-        margin-top: 10px;
-        font-family: 'Inter', sans-serif;
+        font-weight: 300;
+        margin-bottom: 50px;
+        font-family: 'Lato', sans-serif;
     }
 
-    /* 4. BUTTONS / CARDS STYLING */
-    /* This makes the suggestion buttons look like premium cards */
-    div.stButton > button {
-        width: 100%;
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        color: #c9d1d9;
-        padding: 20px 15px;
-        font-family: 'Inter', sans-serif;
-        font-size: 0.95rem;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        text-align: left;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    div.stButton > button:hover {
-        background: rgba(255, 255, 255, 0.08);
-        border-color: #58a6ff; /* Soft Blue highlight */
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        color: #fff;
-    }
-
-    /* 5. CHAT MESSAGES */
-    /* Remove default bubble backgrounds for a cleaner look */
+    /* 4. CHAT BUBBLES */
     .stChatMessage {
         background-color: transparent !important;
+        border: none !important;
     }
     
-    /* Avatar containers */
-    .stChatMessage .st-emotion-cache-1p1m4ay {
-        border-radius: 50%;
+    /* User: Subtle Blue tint */
+    .stChatMessage[data-testid="stChatMessage"]:nth-child(odd) {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-radius: 20px;
+        border-bottom-right-radius: 2px;
+        padding: 15px;
+        margin-bottom: 10px;
+        border: 1px solid rgba(255,255,255,0.05) !important;
+    }
+    
+    /* Assistant: Transparent with Gold accent */
+    .stChatMessage[data-testid="stChatMessage"]:nth-child(even) {
+        background: transparent !important;
+        border-left: 2px solid #D4AF37 !important; /* Gold Line */
+        padding-left: 20px;
     }
 
-    /* 6. INPUT BAR */
+    /* 5. FIXING THE INPUT BAR */
+    /* This targets the container to remove the blocky look */
     .stChatInput {
-        padding-bottom: 30px;
+        background: transparent !important;
     }
     
     .stChatInput textarea {
-        background-color: #161b22 !important;
-        border: 1px solid #30363d !important;
-        color: white !important;
-        border-radius: 10px !important;
+        background-color: #0f1623 !important; /* Darker than background */
+        color: #D4AF37 !important; /* Gold Text */
+        border: 1px solid #334155 !important;
+        border-radius: 50px !important; /* Fully rounded pill shape */
+        padding: 15px 25px !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
     }
     
     .stChatInput textarea:focus {
-        border-color: #58a6ff !important;
-        box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2) !important;
+        border-color: #D4AF37 !important; /* Gold Border on focus */
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.2) !important;
+    }
+    
+    /* Hide the 'Attach' button inside input if possible, or style it */
+    button[kind="secondaryFormSubmit"] {
+        border: none;
+        background: transparent;
+        color: #D4AF37;
     }
 
-    /* Hide standard UI elements */
+    /* 6. BUTTON CARDS */
+    div.stButton > button {
+        background: linear-gradient(145deg, #1e293b, #0f172a);
+        color: #cbd5e1;
+        border: 1px solid #334155;
+        border-radius: 8px;
+        padding: 20px;
+        font-family: 'Cinzel', serif; /* Using luxury font for buttons too */
+        text-align: center;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+    }
+
+    div.stButton > button:hover {
+        border-color: #D4AF37;
+        color: #D4AF37;
+        background: #0f172a;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.15);
+    }
+
+    /* Hide standard Streamlit chrome */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+    
 </style>
 """, unsafe_allow_html=True)
 
-# --- SESSION STATE ---
+# --- SESSION & API ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())
 
-# --- API CONFIG ---
 try:
     API_URL = st.secrets["api"]["url"]
     API_KEY = st.secrets["api"]["key"]
@@ -135,112 +153,85 @@ except KeyError:
 
 # --- SIDEBAR ---
 with st.sidebar:
-    st.title("RELΛI")
-    st.markdown("Your AI Property Expert.")
-    
-    st.markdown("---")
-    if st.button("New Search ⟳", use_container_width=True):
+    st.markdown("### RELAI PRIME")
+    if st.button("NEW CONSULTATION", use_container_width=True):
         st.session_state.messages = []
         st.session_state.session_id = str(uuid.uuid4())
         st.rerun()
-    
-    st.markdown("### Contact")
-    st.link_button("Chat on WhatsApp 💬", "https://api.whatsapp.com/send/?phone=917331112955", use_container_width=True)
 
-# --- MAIN HERO HEADER ---
-# This only shows if the chat is empty, to keep the top clean during conversation
+# --- HERO HEADER ---
+# Only visible when chat is empty
 if len(st.session_state.messages) == 0:
-    st.markdown("""
-        <div class="hero-container">
-            <h1 class="hero-title">RELAI INTELLIGENCE</h1>
-            <p class="hero-subtitle">Data-driven property insights. Ask me anything.</p>
-        </div>
-    """, unsafe_allow_html=True)
+    st.markdown('<div class="hero-title">RELAI</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-subtitle">The Gold Standard in Property Intelligence</div>', unsafe_allow_html=True)
 
 # --- CHAT HISTORY ---
-# We iterate through history. We can assign specific icons for role styling.
 for message in st.session_state.messages:
-    # Set icons based on role
-    icon = "👤" if message["role"] == "user" else "🏢"
-    with st.chat_message(message["role"], avatar=icon):
+    # Custom avatars: A simple user icon and a building for the bot
+    avatar = "👤" if message["role"] == "user" else "🏛️"
+    with st.chat_message(message["role"], avatar=avatar):
         st.markdown(message["content"])
 
-# --- SUGGESTIONS (Empty State) ---
+# --- EMPTY STATE CARDS ---
 if len(st.session_state.messages) == 0:
     st.write("") # Spacer
     col1, col2 = st.columns(2)
     
-    # Helper to process suggestion clicks
-    def handle_click(text):
-        st.session_state.messages.append({"role": "user", "content": text})
-        # Rerun not strictly necessary if we rely on next script execution, 
-        # but helpful for instant feedback.
-    
     with col1:
-        if st.button("🔍 Find a 3BHK in Indiranagar < 2Cr"):
-            st.session_state.messages.append({"role": "user", "content": "Find a 3BHK in Indiranagar under 2 Crores"})
+        if st.button("Luxury Villas > 5 Cr"):
+            st.session_state.messages.append({"role": "user", "content": "Show me luxury villas above 5 Crores"})
             st.rerun()
-        if st.button("🏊 Show me villas with private pools"):
-            st.session_state.messages.append({"role": "user", "content": "Show me villas with private pools"})
-            st.rerun()
+        if st.button("Market Analysis 2025"):
+             st.session_state.messages.append({"role": "user", "content": "What is the market outlook for 2025?"})
+             st.rerun()
 
     with col2:
-        if st.button("📈 Top 5 Investment Areas 2025"):
-            st.session_state.messages.append({"role": "user", "content": "What are the top 5 investment areas for 2025?"})
-            st.rerun()
-        if st.button("💰 Rental Yield Analysis: Mumbai"):
-            st.session_state.messages.append({"role": "user", "content": "Give me a rental yield analysis for Mumbai"})
-            st.rerun()
+        if st.button("High Yield Rentals"):
+             st.session_state.messages.append({"role": "user", "content": "Where can I find high rental yield properties?"})
+             st.rerun()
+        if st.button("Schedule Visit"):
+             st.session_state.messages.append({"role": "user", "content": "I want to schedule a site visit."})
+             st.rerun()
 
-# --- INPUT & LOGIC ---
-# Standard input, but styled by CSS above
-prompt = st.chat_input("Ask about properties, trends, or specific locations...")
+# --- INPUT LOGIC ---
+prompt = st.chat_input("Inquire about a property...")
 
-# Logic: Check if we have a prompt (typed) OR a pending suggestion (from button click history)
-# We need to detect if the last message is USER and we haven't answered it yet.
-last_message_is_user = len(st.session_state.messages) > 0 and st.session_state.messages[-1]["role"] == "user"
-last_message_is_assistant = len(st.session_state.messages) > 0 and st.session_state.messages[-1]["role"] == "assistant"
-
-process_queue = False
+# Handling the "Button Click" vs "Type" logic
+last_msg_user = len(st.session_state.messages) > 0 and st.session_state.messages[-1]["role"] == "user"
+last_msg_asst = len(st.session_state.messages) > 0 and st.session_state.messages[-1]["role"] == "assistant"
 
 if prompt:
-    # 1. User typed something
+    # User typed manually
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user", avatar="👤"):
         st.markdown(prompt)
-    process_queue = True
-
-elif last_message_is_user and not last_message_is_assistant:
-    # 2. User clicked a button (which added to history) but we haven't replied yet
-    process_queue = True
-
-if process_queue:
-    # Get the text to send
-    user_text = st.session_state.messages[-1]["content"]
     
-    with st.chat_message("assistant", avatar="🏢"):
-        with st.spinner("Analyzing market data..."):
+    # Process immediately
+    with st.chat_message("assistant", avatar="🏛️"):
+        with st.spinner("Consulting database..."):
             try:
-                headers = {
-                    "Authorization": f"Bearer {API_KEY}",
-                    "Content-Type": "application/json"
-                }
-                payload = {
-                    "message": user_text,
-                    "sessionId": st.session_state.session_id
-                }
-
+                headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
+                payload = {"message": prompt, "sessionId": st.session_state.session_id}
                 response = requests.get(API_URL, headers=headers, json=payload, timeout=120)
                 response.raise_for_status()
-
-                data = response.json()
-                reply = data.get("reply", "I received the data but the response format was unexpected.")
-                
+                reply = response.json().get("reply", "Error parsing response.")
                 st.markdown(reply)
                 st.session_state.messages.append({"role": "assistant", "content": reply})
+            except Exception as e:
+                st.error(f"Service unavailable: {e}")
 
-            except requests.exceptions.RequestException as e:
-                error_msg = f"Unable to connect to Real Estate Database. Error: {e}"
-                st.error(error_msg)
-                # Remove the user message if it failed, so they can try again? 
-                # Or just leave it. Leaving it is usually better UX so they can copy-paste.
+elif last_msg_user and not last_msg_asst:
+    # User clicked a button, history is updated, but no reply yet
+    user_text = st.session_state.messages[-1]["content"]
+    with st.chat_message("assistant", avatar="🏛️"):
+        with st.spinner("Consulting database..."):
+            try:
+                headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
+                payload = {"message": user_text, "sessionId": st.session_state.session_id}
+                response = requests.get(API_URL, headers=headers, json=payload, timeout=120)
+                response.raise_for_status()
+                reply = response.json().get("reply", "Error parsing response.")
+                st.markdown(reply)
+                st.session_state.messages.append({"role": "assistant", "content": reply})
+            except Exception as e:
+                st.error(f"Service unavailable: {e}")
