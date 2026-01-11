@@ -16,6 +16,11 @@ st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 
 <style>
+    /* Apply Zalando Sans Expanded to everything */
+    * {
+        font-family: "Zalando Sans Expanded", sans-serif !important;
+    }
+    
     /* Apply Zalando Sans Expanded to title and subtitle */
     h1, .subtitle {
         font-family: "Zalando Sans Expanded", sans-serif !important;
@@ -28,13 +33,17 @@ st.markdown("""
         margin-bottom: 2rem !important;
     }
     
-    /* Center button container */
-    .button-container {
+    /* Center buttons */
+    .stButton > button {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    /* Center link buttons */
+    .stButton {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-        margin: 2rem 0;
+        justify-content: center;
     }
 </style>
 """, unsafe_allow_html=True)
