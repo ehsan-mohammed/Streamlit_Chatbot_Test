@@ -44,7 +44,7 @@ st.write("I am a Relai Expert real-estate AI Agent ready to help you find your i
 # st.link_button("UPDATE: DEPLOYED TO PROD! (Chat on WhatsApp 🚀)", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
 
 # I use columns to align text and button side-by-side
-col1, col2 = st.columns([0.65, 0.35]) 
+col1, col2 = st.columns([0.65, 0.01]) 
 with col1:
     # Use generic text to avoid ad-blocker triggers
     st.markdown("**UPDATE: DEPLOYED TO PROD!**") 
