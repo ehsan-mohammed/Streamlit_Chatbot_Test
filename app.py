@@ -34,89 +34,102 @@ else:
 # --- CUSTOM CSS ---
 st.markdown(f"""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&display=swap');
     
     /* Global Styles */
     * {{
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+        font-family: 'Space Grotesk', sans-serif !important;
     }}
     
     /* Main background with image */
     .stApp {{
         background: {'linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url(' + bg_image + ') center/cover no-repeat fixed' if bg_image else 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)'};
+        position: relative;
+    }}
+    
+    /* Gradient overlay at bottom for smooth transition */
+    .stApp::after {{
+        content: '';
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 200px;
+        background: linear-gradient(to bottom, transparent 0%, rgba(15, 23, 42, 0.7) 50%, rgba(15, 23, 42, 0.95) 100%);
+        pointer-events: none;
+        z-index: 1;
     }}
     
     /* Main container styling */
     .main .block-container {{
         padding: 3rem 2rem;
         max-width: 800px;
+        position: relative;
+        z-index: 2;
     }}
     
-    /* Title styling - clean, no gradient */
+    /* Title styling */
     h1 {{
         color: #ffffff !important;
-        font-weight: 400 !important;
+        font-weight: 500 !important;
         font-size: 2.25rem !important;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.01em;
         margin-bottom: 1.5rem !important;
         text-align: center;
     }}
     
     /* Subtitle text */
-    .main p {{
-        color: rgba(255, 255, 255, 0.7) !important;
-        font-size: 1rem;
+    .main > div > div > div > p {{
+        color: rgba(255, 255, 255, 0.75) !important;
+        font-size: 1.05rem;
         font-weight: 300;
         text-align: center;
         margin-bottom: 2rem;
     }}
     
-    /* Center the button container */
-    .button-container {{
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin: 2rem 0 3rem 0;
-    }}
-    
-    /* Button styling - clean, minimal */
+    /* Button styling - square, no border radius */
     .stButton button {{
-        background: rgba(255, 255, 255, 0.1) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
         color: white !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        border-radius: 12px !important;
-        padding: 0.65rem 1.75rem !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 0 !important;
+        padding: 0.75rem 2rem !important;
         font-weight: 400 !important;
         font-size: 0.95rem !important;
         transition: all 0.2s ease !important;
         backdrop-filter: blur(10px) !important;
+        letter-spacing: 0.02em;
     }}
     
     .stButton button:hover {{
-        background: rgba(255, 255, 255, 0.15) !important;
-        border-color: rgba(255, 255, 255, 0.3) !important;
-        transform: translateY(-1px) !important;
+        background: rgba(255, 255, 255, 0.12) !important;
+        border-color: rgba(255, 255, 255, 0.25) !important;
     }}
     
-    /* Chat message containers */
+    /* Hide default streamlit chat avatars */
+    .stChatMessage img {{
+        display: none !important;
+    }}
+    
+    /* Chat message containers - remove border radius */
     .stChatMessage {{
-        background: rgba(255, 255, 255, 0.06) !important;
+        background: rgba(255, 255, 255, 0.05) !important;
         backdrop-filter: blur(10px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        border-radius: 16px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 0 !important;
         padding: 1rem 1.25rem !important;
         margin: 0.5rem 0 !important;
     }}
     
     /* User message styling */
     .stChatMessage[data-testid="user-message"] {{
-        background: rgba(96, 165, 250, 0.12) !important;
-        border-color: rgba(96, 165, 250, 0.2) !important;
+        background: rgba(59, 130, 246, 0.1) !important;
+        border-color: rgba(59, 130, 246, 0.2) !important;
     }}
     
     /* Assistant message styling */
     .stChatMessage[data-testid="assistant-message"] {{
-        background: rgba(255, 255, 255, 0.06) !important;
+        background: rgba(255, 255, 255, 0.05) !important;
     }}
     
     /* Chat message text */
@@ -126,15 +139,18 @@ st.markdown(f"""
         line-height: 1.6 !important;
         text-align: left !important;
         font-weight: 300 !important;
+        margin: 0 !important;
     }}
     
-    /* Chat input container */
+    /* Chat input container - KEEP CURVED */
     .stChatInputContainer {{
-        background: rgba(255, 255, 255, 0.08) !important;
+        background: rgba(20, 30, 48, 0.9) !important;
         backdrop-filter: blur(20px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.12) !important;
-        border-radius: 20px !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 24px !important;
         padding: 0.5rem !important;
+        position: relative;
+        z-index: 3;
     }}
     
     /* Chat input field */
@@ -159,9 +175,14 @@ st.markdown(f"""
     .stAlert {{
         background: rgba(239, 68, 68, 0.1) !important;
         border: 1px solid rgba(239, 68, 68, 0.2) !important;
-        border-radius: 12px !important;
+        border-radius: 0 !important;
         color: #fca5a5 !important;
         font-weight: 300 !important;
+    }}
+    
+    /* Column adjustments */
+    [data-testid="column"] {{
+        padding: 0 0.5rem !important;
     }}
     
     /* Hide Streamlit branding */
@@ -179,13 +200,17 @@ st.markdown(f"""
             font-size: 1.75rem !important;
         }}
         
-        .main p {{
-            font-size: 0.9rem;
+        .main > div > div > div > p {{
+            font-size: 0.95rem;
         }}
         
         .stButton button {{
-            padding: 0.6rem 1.5rem !important;
+            padding: 0.65rem 1.5rem !important;
             font-size: 0.9rem !important;
+        }}
+        
+        .stApp::after {{
+            height: 150px;
         }}
     }}
 </style>
@@ -210,12 +235,7 @@ except KeyError:
 st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 st.write("I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.")
 
-# Center-aligned buttons using HTML
-st.markdown("""
-<div style='display: flex; justify-content: center; gap: 1rem; margin: 2rem 0 3rem 0;'>
-</div>
-""", unsafe_allow_html=True)
-
+# Center-aligned buttons
 col1, col2, col3 = st.columns([1, 1, 1])
 
 with col1:
