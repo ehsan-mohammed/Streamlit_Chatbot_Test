@@ -36,7 +36,7 @@ st.markdown("""
     
     /* --- BUTTON FONT FIX (NUCLEAR OPTION) --- */
     
-    /* Target "Reset Session" (Standard Button) AND all its children elements */
+    /* Target "Reset" (Standard Button) AND all its children elements */
     div[data-testid="stButton"] button, 
     div[data-testid="stButton"] button * {
         font-family: "Zalando Sans Expanded", sans-serif !important;
@@ -83,7 +83,7 @@ with col_btn1:
     )
 
 with col_btn2:
-    if st.button("Reset Session 🔄", use_container_width=True):
+    if st.button("Reset 🔄", use_container_width=True):
         st.session_state.messages = []
         st.session_state.session_id = str(uuid.uuid4())
         st.rerun()
