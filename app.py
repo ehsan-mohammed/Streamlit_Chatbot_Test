@@ -82,13 +82,16 @@ except KeyError:
 st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 st.markdown('<p class="subtitle">I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.</p>', unsafe_allow_html=True)
 
-# Center the buttons
-st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
+# Center the buttons using the standard Streamlit approach with columns
+col1, col2, col3 = st.columns([1, 2, 1])
 
-if st.button("Reset Session 🔄"):
-    st.session_state.messages = []
-    st.session_state.session_id = str(uuid.uuid4())
-    st.rerun()
+with col2:
+    st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
+    
+    if st.button("Reset Session 🔄"):
+        st.session_state.messages = []
+        st.session_state.session_id = str(uuid.uuid4())
+        st.rerun()
         
 # Display existing chat messages from history
 for message in st.session_state.messages:
