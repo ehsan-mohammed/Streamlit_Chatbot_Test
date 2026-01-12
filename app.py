@@ -10,8 +10,6 @@ st.set_page_config(
 )
 
 # --- CUSTOM CSS FOR FONTS ---
-# Note: I removed the ineffective button centering CSS here. 
-# We will handle layout via Python columns instead.
 st.markdown("""
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,10 +34,17 @@ st.markdown("""
         font-family: "TikTok Sans", sans-serif !important;
     }
     
-    /* Apply Zalando Sans Expanded to buttons */
-    .stButton > button,
-    .stButton > a {
+    /* --- BUTTON FONT FIX --- */
+    /* Target standard buttons (Reset Session) */
+    div[data-testid="stButton"] > button {
         font-family: "Zalando Sans Expanded", sans-serif !important;
+        font-weight: 600 !important; /* Optional: makes text slightly bolder/cleaner */
+    }
+    
+    /* Target link buttons (Launch) */
+    div[data-testid="stLinkButton"] > a {
+        font-family: "Zalando Sans Expanded", sans-serif !important;
+        font-weight: 600 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -56,23 +61,18 @@ try:
     API_URL = st.secrets["api"]["url"]
     API_KEY = st.secrets["api"]["key"]
 except KeyError:
-    # Fallback for testing if secrets aren't set up yet
+    # Placeholder for local testing if secrets are missing
     API_URL = "http://localhost:8000" 
     API_KEY = "test"
-    # st.error("API URL/Key not found. Please add them to your Streamlit secrets.")
-    # st.stop()
 
 # --- UI & LOGIC ---
 st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 st.markdown('<p class="subtitle">I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.</p>', unsafe_allow_html=True)
 
-# --- LAYOUT FIX: CENTERED BUTTONS ---
-# We use columns to create space on the left and right.
-# [Spacer, Button 1, Button 2, Spacer]
+# --- LAYOUT: CENTERED BUTTONS ---
 col_spacer1, col_btn1, col_btn2, col_spacer2 = st.columns([1, 2, 2, 1])
 
 with col_btn1:
-    # use_container_width=True makes the button fill the column nicely
     st.link_button(
         "Launch 🚀", 
         "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0",
@@ -86,14 +86,12 @@ with col_btn2:
         st.rerun()
 
 # --- CHAT INTERFACE ---
-st.divider() # Adds a nice visual separation
+st.divider()
 
-# Display existing chat messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# React to user input
 if prompt := st.chat_input("How can I help you today?"):
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -124,4 +122,3 @@ if prompt := st.chat_input("How can I help you today?"):
 
         except requests.exceptions.RequestException as e:
             st.error(f"Could not connect to the AI agent. Please try again later.")
-            # st.session_state.messages.pop()
