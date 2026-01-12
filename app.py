@@ -14,14 +14,10 @@ st.markdown("""
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap" rel="stylesheet">
 
 <style>
-    /* Apply Zalando Sans Expanded to everything */
-    * {
-        font-family: "Zalando Sans Expanded", sans-serif !important;
-    }
-    
-    /* Apply Zalando Sans Expanded to title and subtitle */
+    /* Apply Zalando Sans Expanded to title and subtitle only */
     h1, .subtitle {
         font-family: "Zalando Sans Expanded", sans-serif !important;
         text-align: center !important;
@@ -33,17 +29,24 @@ st.markdown("""
         margin-bottom: 2rem !important;
     }
     
-    /* Center buttons */
-    .stButton > button {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
+    /* Apply TikTok Sans to chat messages */
+    .stChatMessage {
+        font-family: "TikTok Sans", sans-serif !important;
     }
     
-    /* Center link buttons */
-    .stButton {
+    /* Center buttons - more specific targeting */
+    div[data-testid="column"]:nth-child(2) .stButton > button,
+    div[data-testid="column"]:nth-child(2) .stButton > a {
+        display: block;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    
+    /* Ensure button container is centered */
+    div[data-testid="column"]:nth-child(2) {
         display: flex;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
     }
 </style>
 """, unsafe_allow_html=True)
