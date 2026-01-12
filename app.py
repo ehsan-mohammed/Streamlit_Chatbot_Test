@@ -34,15 +34,18 @@ st.markdown("""
         font-family: "TikTok Sans", sans-serif !important;
     }
     
-    /* --- BUTTON FONT FIX --- */
-    /* Target standard buttons (Reset Session) */
-    div[data-testid="stButton"] > button {
+    /* --- BUTTON FONT FIX (NUCLEAR OPTION) --- */
+    
+    /* Target "Reset Session" (Standard Button) AND all its children elements */
+    div[data-testid="stButton"] button, 
+    div[data-testid="stButton"] button * {
         font-family: "Zalando Sans Expanded", sans-serif !important;
-        font-weight: 600 !important; /* Optional: makes text slightly bolder/cleaner */
+        font-weight: 600 !important;
     }
     
-    /* Target link buttons (Launch) */
-    div[data-testid="stLinkButton"] > a {
+    /* Target "Launch" (Link Button) AND all its children elements */
+    div[data-testid="stLinkButton"] a, 
+    div[data-testid="stLinkButton"] a * {
         font-family: "Zalando Sans Expanded", sans-serif !important;
         font-weight: 600 !important;
     }
@@ -61,7 +64,6 @@ try:
     API_URL = st.secrets["api"]["url"]
     API_KEY = st.secrets["api"]["key"]
 except KeyError:
-    # Placeholder for local testing if secrets are missing
     API_URL = "http://localhost:8000" 
     API_KEY = "test"
 
@@ -70,6 +72,7 @@ st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 st.markdown('<p class="subtitle">I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.</p>', unsafe_allow_html=True)
 
 # --- LAYOUT: CENTERED BUTTONS ---
+# Using columns to center the buttons perfectly
 col_spacer1, col_btn1, col_btn2, col_spacer2 = st.columns([1, 2, 2, 1])
 
 with col_btn1:
