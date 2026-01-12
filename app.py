@@ -34,25 +34,15 @@ st.markdown("""
         font-family: "TikTok Sans", sans-serif !important;
     }
     
-    /* Apply Zalando Sans Expanded to button text */
+    /* Apply Zalando Sans Expanded to buttons */
     .stButton > button,
-    .stButton > a,
-    .stButton button p,
-    .stButton a p {
+    .stButton > a {
         font-family: "Zalando Sans Expanded", sans-serif !important;
     }
     
-    /* Center the button containers on the page */
+    /* Center all buttons - this is the correct way for Streamlit */
     div.stButton {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    /* Center button elements themselves */
-    div.stButton > button,
-    div.stButton > a {
-        margin: 0 auto;
+        text-align: center;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -82,16 +72,13 @@ except KeyError:
 st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 st.markdown('<p class="subtitle">I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.</p>', unsafe_allow_html=True)
 
-# Center the buttons using the standard Streamlit approach with columns
-col1, col2, col3 = st.columns([1, 2, 1])
+# Center the buttons
+st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
 
-with col2:
-    st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
-    
-    if st.button("Reset Session 🔄"):
-        st.session_state.messages = []
-        st.session_state.session_id = str(uuid.uuid4())
-        st.rerun()
+if st.button("Reset Session 🔄"):
+    st.session_state.messages = []
+    st.session_state.session_id = str(uuid.uuid4())
+    st.rerun()
         
 # Display existing chat messages from history
 for message in st.session_state.messages:
