@@ -34,19 +34,34 @@ st.markdown("""
         font-family: "TikTok Sans", sans-serif !important;
     }
     
-    /* Center buttons - more specific targeting */
-    div[data-testid="column"]:nth-child(2) .stButton > button,
-    div[data-testid="column"]:nth-child(2) .stButton > a {
-        display: block;
-        margin-left: auto !important;
-        margin-right: auto !important;
+    /* Apply Zalando Sans Expanded to buttons */
+    .stButton > button,
+    .stButton > a {
+        font-family: "Zalando Sans Expanded", sans-serif !important;
     }
     
-    /* Ensure button container is centered */
-    div[data-testid="column"]:nth-child(2) {
+    /* Center buttons wrapper */
+    .button-wrapper {
         display: flex;
         flex-direction: column;
         align-items: center;
+        gap: 1rem;
+        width: 100%;
+        margin: 2rem 0;
+    }
+    
+    /* Center all buttons */
+    .button-wrapper .stButton,
+    .stButton {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .stButton > button,
+    .stButton > a {
+        display: block;
+        margin: 0 auto !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -76,16 +91,14 @@ except KeyError:
 st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 st.markdown('<p class="subtitle">I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.</p>', unsafe_allow_html=True)
 
-# Center the buttons using columns with empty space on sides
-col1, col2, col3 = st.columns([1, 1, 1])
-
-with col2:
-    st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
-    
-    if st.button("Reset Session 🔄"):
-        st.session_state.messages = []
-        st.session_state.session_id = str(uuid.uuid4())
-        st.rerun()
+# Center the buttons - use markdown for better centering control
+st.markdown('<div class="button-wrapper">', unsafe_allow_html=True)
+st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
+if st.button("Reset Session 🔄"):
+    st.session_state.messages = []
+    st.session_state.session_id = str(uuid.uuid4())
+    st.rerun()
+st.markdown('</div>', unsafe_allow_html=True)
         
 # Display existing chat messages from history
 for message in st.session_state.messages:
