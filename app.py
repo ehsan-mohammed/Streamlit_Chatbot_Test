@@ -14,7 +14,7 @@ st.markdown("""
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 
 <style>
     /* Apply Zalando Sans Expanded to title and subtitle only */
@@ -29,9 +29,9 @@ st.markdown("""
         margin-bottom: 2rem !important;
     }
     
-    /* Apply TikTok Sans to chat messages */
+    /* Apply Atkinson Hyperlegible Mono to chat messages ONLY */
     .stChatMessage {
-        font-family: "TikTok Sans", sans-serif !important;
+        font-family: "Atkinson Hyperlegible Mono", monospace !important;
     }
     
     /* --- BUTTON FONT FIX (NUCLEAR OPTION) --- */
@@ -72,7 +72,6 @@ st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 st.markdown('<p class="subtitle">I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.</p>', unsafe_allow_html=True)
 
 # --- LAYOUT: CENTERED BUTTONS ---
-# Using columns to center the buttons perfectly
 col_spacer1, col_btn1, col_btn2, col_spacer2 = st.columns([1, 2, 2, 1])
 
 with col_btn1:
@@ -83,6 +82,7 @@ with col_btn1:
     )
 
 with col_btn2:
+    # Updated text: Removed "Session" as requested
     if st.button("Reset 🔄", use_container_width=True):
         st.session_state.messages = []
         st.session_state.session_id = str(uuid.uuid4())
