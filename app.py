@@ -9,7 +9,9 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- CUSTOM CSS FOR CENTERED LAYOUT AND FONT ---
+# --- CUSTOM CSS FOR FONTS ---
+# Note: I removed the ineffective button centering CSS here. 
+# We will handle layout via Python columns instead.
 st.markdown("""
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,62 +41,65 @@ st.markdown("""
     .stButton > a {
         font-family: "Zalando Sans Expanded", sans-serif !important;
     }
-    
-    /* Center all buttons - this is the correct way for Streamlit */
-    div.stButton {
-        text-align: center;
-    }
 </style>
 """, unsafe_allow_html=True)
 
 # --- SESSION STATE INITIALIZATION ---
-# This is crucial for maintaining the chat history and a unique session ID per user.
-# The session ID is sent to your backend to retrieve the correct Postgres chat memory.
-
-# Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Initialize a unique session ID
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())
 
 # --- BACKEND API DETAILS ---
-# Load secrets from the .streamlit/secrets.toml file
 try:
     API_URL = st.secrets["api"]["url"]
     API_KEY = st.secrets["api"]["key"]
 except KeyError:
-    st.error("API URL/Key not found. Please add them to your Streamlit secrets.")
-    st.stop()
+    # Fallback for testing if secrets aren't set up yet
+    API_URL = "http://localhost:8000" 
+    API_KEY = "test"
+    # st.error("API URL/Key not found. Please add them to your Streamlit secrets.")
+    # st.stop()
 
 # --- UI & LOGIC ---
 st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
 st.markdown('<p class="subtitle">I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.</p>', unsafe_allow_html=True)
 
-# Center the buttons
-st.link_button("Launch 🚀", "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0")
+# --- LAYOUT FIX: CENTERED BUTTONS ---
+# We use columns to create space on the left and right.
+# [Spacer, Button 1, Button 2, Spacer]
+col_spacer1, col_btn1, col_btn2, col_spacer2 = st.columns([1, 2, 2, 1])
 
-if st.button("Reset Session 🔄"):
-    st.session_state.messages = []
-    st.session_state.session_id = str(uuid.uuid4())
-    st.rerun()
-        
-# Display existing chat messages from history
+with col_btn1:
+    # use_container_width=True makes the button fill the column nicely
+    st.link_button(
+        "Launch 🚀", 
+        "https://api.whatsapp.com/send/?phone=917331112955&text=Hi%21+I+need+help+with+property+recommendations.&type=phone_number&app_absent=0",
+        use_container_width=True
+    )
+
+with col_btn2:
+    if st.button("Reset Session 🔄", use_container_width=True):
+        st.session_state.messages = []
+        st.session_state.session_id = str(uuid.uuid4())
+        st.rerun()
+
+# --- CHAT INTERFACE ---
+st.divider() # Adds a nice visual separation
+
+# Display existing chat messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
 # React to user input
 if prompt := st.chat_input("How can I help you today?"):
-    # 1. Display user message in chat message container
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # 2. Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # 3. Call the backend API
     with st.spinner("Thinking..."):
         try:
             headers = {
@@ -107,20 +112,16 @@ if prompt := st.chat_input("How can I help you today?"):
             }
 
             response = requests.get(API_URL, headers=headers, json=payload, timeout=120)
-            response.raise_for_status()  # Raises an HTTPError for bad responses (4xx or 5xx)
+            response.raise_for_status()
 
-            # 4. Process the response
             backend_response = response.json()
             assistant_reply = backend_response.get("reply", "Sorry, I encountered an error.")
 
-            # 5. Display assistant response in chat message container
             with st.chat_message("assistant"):
                 st.markdown(assistant_reply)
 
-            # 6. Add assistant response to chat history
             st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
 
         except requests.exceptions.RequestException as e:
-            st.error(f"Could not connect to the AI agent. Please try again later. Error: {e}")
-            # Optionally remove the user's last message to allow them to retry
-            st.session_state.messages.pop()
+            st.error(f"Could not connect to the AI agent. Please try again later.")
+            # st.session_state.messages.pop()
