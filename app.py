@@ -43,14 +43,17 @@ st.markdown("""
     }
 
     /* 3. CHAT MESSAGES (Recursive) */
-    /* Target the markdown container INSIDE the chat message */
     [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] * {
         font-family: "Recursive", sans-serif !important;
     }
-    
-    /* Apply to the container wrapper as well for good measure */
     [data-testid="stChatMessage"] {
         font-family: "Recursive", sans-serif !important;
+    }
+
+    /* 4. ROBOT EMOJI FIX (Chat Avatar) */
+    /* This forces the assistant icon in the chat to use the default system font (colorful emoji) */
+    [data-testid="stChatAvatar"] {
+        font-family: sans-serif, "Segoe UI Emoji", "Apple Color Emoji" !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -71,7 +74,21 @@ except KeyError:
     API_KEY = "test"
 
 # --- UI & LOGIC ---
-st.title("WhatsApp Chat Bot 2.0 Prototype 🤖")
+
+# 1. TITLE REPLACEMENT (The "Font Surgery")
+# We use HTML to wrap the robot emoji in a span that forces 'sans-serif'. 
+# This strips the 'Zalando' styling from the robot, revealing the nice system emoji.
+st.markdown(
+    """
+    <h1 style='text-align: center;'>
+        WhatsApp Chat Bot 2.0 Prototype 
+        <span style='font-family: sans-serif, "Segoe UI Emoji", "Apple Color Emoji";'>🤖</span>
+    </h1>
+    """, 
+    unsafe_allow_html=True
+)
+
+# Subtitle
 st.markdown('<p class="subtitle">I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.</p>', unsafe_allow_html=True)
 
 # --- LAYOUT: CENTERED BUTTONS ---
