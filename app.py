@@ -34,15 +34,25 @@ st.markdown("""
         font-family: "TikTok Sans", sans-serif !important;
     }
     
-    /* Apply Zalando Sans Expanded to buttons */
+    /* Apply Zalando Sans Expanded to button text */
     .stButton > button,
-    .stButton > a {
+    .stButton > a,
+    .stButton button p,
+    .stButton a p {
         font-family: "Zalando Sans Expanded", sans-serif !important;
     }
     
-    /* Center all buttons - this is the correct way for Streamlit */
+    /* Center the button containers on the page */
     div.stButton {
-        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    /* Center button elements themselves */
+    div.stButton > button,
+    div.stButton > a {
+        margin: 0 auto;
     }
 </style>
 """, unsafe_allow_html=True)
