@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 512 512" xml:space="preserve">
+<polygon style="fill:#93C7EF;" points="165.647,512 120.471,512 120.471,451.765 195.765,451.765 "/>
+<g>
+	<polygon style="fill:#5A8BB0;" points="391.529,512 346.353,512 316.235,451.765 391.529,451.765 	"/>
+	<rect x="233.412" y="233.412" style="fill:#5A8BB0;" width="45.176" height="97.882"/>
+</g>
+<path style="fill:#93C7EF;" d="M301.176,45.176C301.176,20.227,280.949,0,256,0s-45.176,20.227-45.176,45.176
+	c0,16.718,9.09,31.306,22.588,39.118v73.823h45.176V84.295C292.087,76.482,301.176,61.895,301.176,45.176z"/>
+<path style="fill:#5A8BB0;" d="M256,0v158.118h22.588V84.295c13.499-7.813,22.588-22.4,22.588-39.118
+	C301.176,20.227,280.949,0,256,0z"/>
+<rect x="105.412" y="165.647" style="fill:#93C7EF;" width="165.647" height="45.176"/>
+<rect x="240.941" y="165.647" style="fill:#5A8BB0;" width="165.647" height="45.176"/>
+<rect x="135.529" y="105.412" style="fill:#CCE9F9;" width="240.941" height="165.647"/>
+<rect x="256" y="105.412" style="fill:#93C7EF;" width="120.471" height="165.647"/>
+<rect x="165.647" y="316.235" style="fill:#CCE9F9;" width="180.706" height="195.765"/>
+<rect x="256" y="316.235" style="fill:#93C7EF;" width="90.353" height="195.765"/>
+<circle style="fill:#3C5D76;" cx="206.276" cy="173.176" r="22.588"/>
+<g>
+	<circle style="fill:#1E2E3B;" cx="311.688" cy="173.176" r="22.588"/>
+	<path style="fill:#1E2E3B;" d="M228.87,210.824c0,16.632,13.484,30.118,30.118,30.118l0,0c16.632,0,30.118-13.485,30.118-30.118
+		H228.87z"/>
+</g>
+<rect x="210.824" y="361.412" style="fill:#93C7EF;" width="90.353" height="90.353"/>
+<rect x="256" y="361.412" style="fill:#5A8BB0;" width="45.176" height="90.353"/>
+</svg>
