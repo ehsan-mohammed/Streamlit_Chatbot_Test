@@ -14,7 +14,7 @@ st.markdown("""
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Recursive:wght@300..1000&display=swap" rel="stylesheet">
 
 <style>
     /* 1. HEADERS & SUBTITLES (Zalando) */
@@ -42,15 +42,15 @@ st.markdown("""
         font-weight: 600 !important;
     }
 
-    /* 3. CHAT MESSAGES (Atkinson Hyperlegible Mono) */
-    /* We must target the markdown container INSIDE the chat message */
+    /* 3. CHAT MESSAGES (Recursive) */
+    /* Target the markdown container INSIDE the chat message */
     [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] * {
-        font-family: "Atkinson Hyperlegible Mono", monospace !important;
+        font-family: "Recursive", sans-serif !important;
     }
     
-    /* Optional: Ensure the raw container also tries to use it */
+    /* Apply to the container wrapper as well for good measure */
     [data-testid="stChatMessage"] {
-        font-family: "Atkinson Hyperlegible Mono", monospace !important;
+        font-family: "Recursive", sans-serif !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -85,7 +85,6 @@ with col_btn1:
     )
 
 with col_btn2:
-    # "Reset" button (Removed "Session" as requested)
     if st.button("Reset 🔄", use_container_width=True):
         st.session_state.messages = []
         st.session_state.session_id = str(uuid.uuid4())
