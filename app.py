@@ -17,37 +17,40 @@ st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
 
 <style>
-    /* Apply Zalando Sans Expanded to title and subtitle only */
+    /* 1. HEADERS & SUBTITLES (Zalando) */
     h1, .subtitle {
         font-family: "Zalando Sans Expanded", sans-serif !important;
         text-align: center !important;
     }
     
-    /* Center the subtitle text */
     .subtitle {
-        text-align: center !important;
         margin-bottom: 2rem !important;
     }
-    
-    /* Apply Atkinson Hyperlegible Mono to chat messages ONLY */
-    .stChatMessage {
-        font-family: "Atkinson Hyperlegible Mono", monospace !important;
-    }
-    
-    /* --- BUTTON FONT FIX (NUCLEAR OPTION) --- */
-    
-    /* Target "Reset" (Standard Button) AND all its children elements */
+
+    /* 2. BUTTONS (Zalando) */
+    /* Target "Reset" button text */
     div[data-testid="stButton"] button, 
     div[data-testid="stButton"] button * {
         font-family: "Zalando Sans Expanded", sans-serif !important;
         font-weight: 600 !important;
     }
     
-    /* Target "Launch" (Link Button) AND all its children elements */
+    /* Target "Launch" link button text */
     div[data-testid="stLinkButton"] a, 
     div[data-testid="stLinkButton"] a * {
         font-family: "Zalando Sans Expanded", sans-serif !important;
         font-weight: 600 !important;
+    }
+
+    /* 3. CHAT MESSAGES (Atkinson Hyperlegible Mono) */
+    /* We must target the markdown container INSIDE the chat message */
+    [data-testid="stChatMessage"] [data-testid="stMarkdownContainer"] * {
+        font-family: "Atkinson Hyperlegible Mono", monospace !important;
+    }
+    
+    /* Optional: Ensure the raw container also tries to use it */
+    [data-testid="stChatMessage"] {
+        font-family: "Atkinson Hyperlegible Mono", monospace !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -82,7 +85,7 @@ with col_btn1:
     )
 
 with col_btn2:
-    # Updated text: Removed "Session" as requested
+    # "Reset" button (Removed "Session" as requested)
     if st.button("Reset 🔄", use_container_width=True):
         st.session_state.messages = []
         st.session_state.session_id = str(uuid.uuid4())
