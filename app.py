@@ -80,10 +80,7 @@ except KeyError:
 # This strips the 'Zalando' styling from the robot, revealing the nice system emoji.
 st.markdown(
     """
-    <h1 style='text-align: center;'>
-        WhatsApp Chat Bot 2.0 Prototype 
-        <span style='font-family: sans-serif, "Segoe UI Emoji", "Apple Color Emoji";'>🤖</span>
-    </h1>
+    <h1 style='text-align: center;'>WhatsApp Chat Bot 2.0 Prototype</h1>
     """, 
     unsafe_allow_html=True
 )
