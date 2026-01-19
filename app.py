@@ -97,7 +97,7 @@ col_spacer1, col_btn1, col_btn2, col_spacer2 = st.columns([1, 2, 2, 1])
 with col_btn1:
     st.link_button(
         "Launch 🚀", 
-        "https://api.whatsapp.com/send/?phone=917331112955&text=Hi.&type=phone_number&app_absent=0",
+        "https://api.whatsapp.com/send/?phone=917331112955&text=Hi&type=phone_number&app_absent=0",
         use_container_width=True
     )
 
