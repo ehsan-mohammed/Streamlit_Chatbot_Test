@@ -2,11 +2,17 @@ import time
 import uuid
 import requests
 import streamlit as st
+from collections import deque
+from streamlit.web.server.websocket_headers import _get_websocket_headers
 
 # --- CONFIGURATION ---
 PAGE_TITLE = "ChatBot Prototype"
 PAGE_ICON = "🤖"
 API_TIMEOUT = 120 
+
+# RATE LIMIT SETTINGS
+MAX_REQ_PER_MINUTE = 5   # Max messages per IP per minute
+BLOCK_TIME_SECONDS = 60  # How long to block them if they exceed limits
 
 st.set_page_config(
     page_title=PAGE_TITLE,
@@ -31,6 +37,48 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# --- GLOBAL RATE LIMITER (The "Bouncer") ---
+# @st.cache_resource ensures this object is created ONCE and shared across all users.
+# It does not get wiped when a user refreshes or clicks reset.
+
+@st.cache_resource
+class RateLimiter:
+    def __init__(self):
+        self.requests = {} # Stores {ip: deque([timestamp1, timestamp2...])}
+
+    def is_rate_limited(self, ip):
+        now = time.time()
+        
+        # 1. Initialize if new IP
+        if ip not in self.requests:
+            self.requests[ip] = deque()
+
+        # 2. Clean up old requests (older than 1 minute)
+        # We peek at the left (oldest) and pop if it's expired
+        while self.requests[ip] and self.requests[ip][0] < now - 60:
+            self.requests[ip].popleft()
+
+        # 3. Check specific block conditions
+        if len(self.requests[ip]) >= MAX_REQ_PER_MINUTE:
+            return True
+        
+        return False
+
+    def add_request(self, ip):
+        self.requests[ip].append(time.time())
+
+# Instantiate the global limiter
+limiter = RateLimiter()
+
+def get_remote_ip():
+    """Attempts to get the client IP address from request headers."""
+    try:
+        headers = _get_websocket_headers()
+        # X-Forwarded-For is the standard header for identifying IPs behind a load balancer
+        return headers.get("X-Forwarded-For", "unknown_ip")
+    except:
+        return "unknown_ip"
+
 # --- SESSION STATE ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -38,7 +86,6 @@ if "messages" not in st.session_state:
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())
 
-# [NEW] State to track if we are currently waiting for an answer
 if "processing" not in st.session_state:
     st.session_state.processing = False
 
@@ -52,7 +99,6 @@ except (KeyError, FileNotFoundError):
 
 # --- HELPER FUNCTIONS ---
 def lock_input():
-    """Callback to lock the UI immediately when user hits Enter."""
     st.session_state.processing = True
 
 # --- UI HEADER ---
@@ -69,7 +115,7 @@ with col_btn2:
     if st.button("Reset 🔄", use_container_width=True):
         st.session_state.messages = []
         st.session_state.session_id = str(uuid.uuid4())
-        st.session_state.processing = False # Ensure we unlock on reset
+        st.session_state.processing = False 
         st.rerun()
 
 st.divider()
@@ -81,9 +127,6 @@ for message in st.session_state.messages:
 
 # --- CHAT INPUT & LOGIC ---
 
-# 1. The Input Widget
-# We bind the 'disabled' state to our session variable.
-# We use 'on_submit' to trigger the lock BEFORE the script re-runs.
 prompt = st.chat_input(
     "How can I help you today?", 
     disabled=st.session_state.processing, 
@@ -91,18 +134,29 @@ prompt = st.chat_input(
 )
 
 if prompt:
-    # 2. Render User Message
+    # --- 1. GLOBAL SECURITY CHECK ---
+    user_ip = get_remote_ip()
+    
+    # Check if this IP is abusing the system
+    if limiter.is_rate_limited(user_ip):
+        st.error(f"⛔ Rate limit exceeded. You are sending too many requests. Please wait a minute.")
+        st.session_state.processing = False # Unlock so they can see the error, but don't run logic
+        st.stop() # HALT execution immediately
+
+    # If they pass, log this request
+    limiter.add_request(user_ip)
+
+    # --- 2. RENDER USER MESSAGE ---
     with st.chat_message("user"):
         st.markdown(prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # 3. API Call
+    # --- 3. API CALL ---
     with st.spinner("Thinking..."):
         try:
             headers = {"Authorization": f"Bearer {API_KEY}", "Content-Type": "application/json"}
             payload = {"message": prompt, "sessionId": st.session_state.session_id}
             
-            # This call blocks the script while it waits
             response = requests.get(API_URL, headers=headers, json=payload, timeout=API_TIMEOUT)
             response.raise_for_status()
             
@@ -116,7 +170,5 @@ if prompt:
             st.error("Could not connect to the AI agent. Please try again later.")
         
         finally:
-            # 4. UNLOCK & RERUN
-            # We must set processing to False and immediately rerun to reactivate the input box
             st.session_state.processing = False
             st.rerun()
