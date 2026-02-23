@@ -124,6 +124,7 @@ st.divider()
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
+        st.caption(message.get("time", ""))
 
 # --- CHAT INPUT & LOGIC ---
 
@@ -149,7 +150,11 @@ if prompt:
     # --- 2. RENDER USER MESSAGE ---
     with st.chat_message("user"):
         st.markdown(prompt)
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    st.session_state.messages.append({
+        "role": "user",
+        "content": prompt,
+        "time": time.strftime("%I:%M %p")  # e.g. "03:45 PM"
+    })    
 
     # --- 3. API CALL ---
     with st.spinner("Thinking..."):
@@ -164,7 +169,11 @@ if prompt:
 
             with st.chat_message("assistant"):
                 st.markdown(assistant_reply)
-            st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": assistant_reply,
+                "time": time.strftime("%I:%M %p")
+            })
 
         except requests.exceptions.RequestException as e:
             st.error("Could not connect to the AI agent. Please try again later.")
