@@ -3,6 +3,7 @@ import uuid
 import requests
 import streamlit as st
 from collections import deque
+from datetime import datetime, timezone, timedelta
 from streamlit.web.server.websocket_headers import _get_websocket_headers
 
 # --- CONFIGURATION ---
@@ -101,6 +102,11 @@ except (KeyError, FileNotFoundError):
 def lock_input():
     st.session_state.processing = True
 
+# --- IST TIME ---
+def get_ist_time():
+    IST = timezone(timedelta(hours=5, minutes=30))
+    return datetime.now(IST).strftime("%I:%M %p IST")
+
 # --- UI HEADER ---
 st.markdown("<h1 style='text-align: center;'>WhatsApp Chat Bot 2.0 Prototype</h1>", unsafe_allow_html=True)
 st.markdown('<p class="subtitle">I am a Relai Expert real-estate AI Agent ready to help you find your ideal property.</p>', unsafe_allow_html=True)
@@ -153,9 +159,9 @@ if prompt:
     st.session_state.messages.append({
         "role": "user",
         "content": prompt,
-        "time": time.strftime("%I:%M %p")  # e.g. "03:45 PM"
-    })    
-
+        "time": get_ist_time()  # e.g. "03:45 PM IST"
+    })
+    
     # --- 3. API CALL ---
     with st.spinner("Thinking..."):
         try:
@@ -172,7 +178,7 @@ if prompt:
             st.session_state.messages.append({
                 "role": "assistant",
                 "content": assistant_reply,
-                "time": time.strftime("%I:%M %p")
+                "time": get_ist_time()
             })
 
         except requests.exceptions.RequestException as e:
