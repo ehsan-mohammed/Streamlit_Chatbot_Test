@@ -102,6 +102,16 @@ except (KeyError, FileNotFoundError):
 def lock_input():
     st.session_state.processing = True
 
+def post_error_message(text):
+    """Renders an error as an assistant chat bubble and persists it in history."""
+    with st.chat_message("assistant"):
+        st.markdown(text)
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": text,
+        "time": get_ist_time()
+    })
+
 # --- IST TIME ---
 def get_ist_time():
     IST = timezone(timedelta(hours=5, minutes=30))
@@ -181,8 +191,41 @@ if prompt:
                 "time": get_ist_time()
             })
 
-        except requests.exceptions.RequestException as e:
-            st.error("Could not connect to the AI agent. Please try again later.")
+        except requests.exceptions.Timeout:
+            post_error_message(
+                "⏳ I'm taking longer than expected to respond. "
+                "This sometimes happens during high traffic — please try sending your message again."
+            )
+
+        except requests.exceptions.ConnectionError:
+            post_error_message(
+                "🔌 I'm unable to reach the backend service right now. "
+                "It may be temporarily down or restarting. Please try again in a moment."
+            )
+
+        except requests.exceptions.HTTPError as e:
+            status = e.response.status_code if e.response is not None else "unknown"
+            if status == 503:
+                post_error_message(
+                    "🛠️ The assistant service is temporarily unavailable (503). "
+                    "It's likely restarting or under maintenance — please try again in a minute."
+                )
+            elif status == 429:
+                post_error_message(
+                    "🚦 The assistant is receiving too many requests right now. "
+                    "Please wait a moment before trying again."
+                )
+            else:
+                post_error_message(
+                    f"⚠️ Something went wrong on the server (HTTP {status}). "
+                    "Please try again, and if the issue persists, contact support."
+                )
+
+        except requests.exceptions.RequestException:
+            post_error_message(
+                "❌ An unexpected error occurred while contacting the assistant. "
+                "Please try again — if this keeps happening, the service may be experiencing issues."
+            )
         
         finally:
             st.session_state.processing = False
